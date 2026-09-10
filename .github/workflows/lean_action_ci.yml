@@ -1,0 +1,40 @@
+name: Verify Lean proof
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      LEAN_NUM_THREADS: 2
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: leanprover/lean-action@v1
+        with:
+          auto-config: false
+          build: true
+          use-mathlib-cache: true
+          # Check project sources afresh; only mathlib uses precompiled files.
+          use-github-cache: false
+      - name: Check exact theorem and its axioms
+        shell: bash
+        run: |
+          lake env lean --stdin <<'LEAN'
+          import AffineTverberg.MainTheoremProof
+          example : AffineTverberg.mainTheoremStatement := AffineTverberg.mainTheorem
+          #check AffineTverberg.mainTheorem
+          #print axioms AffineTverberg.mainTheorem
+          /--
+          info: 'AffineTverberg.mainTheorem' depends on axioms: [propext, Classical.choice, Quot.sound]
+          -/
+          #guard_msgs in
+          #print axioms AffineTverberg.mainTheorem
+          LEAN

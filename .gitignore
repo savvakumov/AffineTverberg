@@ -1,0 +1,26 @@
+/.lake/
+
+# Local research material and downloaded proof archives, not publication sources.
+/AristotleTasks/
+/Artifacts/
+/FORMALIZATION_STATUS.md
+/PROOF_VERIFICATION.md
+/Upload-ToGitHub.ps1
+/[Vv]ersions.txt
+*.tex
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# Generated Lean files and local credentials/settings.
+*.olean
+*.ilean
+*.trace
+*.log
+.env
+.env.*
+*.pem
+*.key
+/.codex/
+/.agents/
